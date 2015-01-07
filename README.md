@@ -1,5 +1,5 @@
 # qhost
-[![Build Status](https://travis-ci.org/rlyon/qhost.svg?branch=master)](https://travis-ci.org/rlyon/qhost)
+[![Build Status](https://travis-ci.org/kmanalo/qhost.svg?branch=master)](https://travis-ci.org/kmanalo/qhost)
 
 Gridengine qhost replacement for PBS based systems. Summarize pbsnodes output in a quick list. View execution node information such as processors, running jobs, memory stats, and state.
 
