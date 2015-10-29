@@ -128,7 +128,7 @@ def run(options):
     else:
         try:
             pbsnodes_xml = open(options.xmlfile, 'r').read()
-  
+
             # TODO: provide xml option for showq commands
             showq = qhost.Showq("showq")
             showq_xml = showq.execute()
