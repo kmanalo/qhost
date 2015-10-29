@@ -109,10 +109,13 @@ def run(options):
     if options.xmlfile is None:
         pbsnodes = qhost.Pbsnodes("pbsnodes")
         showq = qhost.Showq("showq")
-        xml = pbsnodes.execute()
-        xml2 = showq.execute()
-        if xml is None:
+        pbsnodes_xml = pbsnodes.execute()
+        showq_xml = showq.execute()
+        if pbsnodes_xml is None:
             print pbsnodes.error()
+            sys.exit(1)
+        if showq_xml is None:
+            print showq.error()
             sys.exit(1)
     else:
         try:
@@ -121,10 +124,11 @@ def run(options):
             print e
             sys.exit(1)
 
-    qp = qhost.Parser(xml)
-    qp2 = qhost.Parser2(xml2)
-    nodelist = qp.parse()
-    joblist = qp2.parse()
+    qp_pbsnodes = qhost.Parser_Pbsnodes(pbsnodes_xml)
+    qp_showq = qhost.Parser_Showq(showq_xml)
+    nodelist = qp_pbsnodes.parse()
+    joblist = qp_showq.parse()
+
     if options.exclusive:
         nodelist.add_filter("exclusive_state", options.state)
     else:
@@ -133,12 +137,8 @@ def run(options):
     nodelist.add_filter("jobid", options.jobid)
     nodelist.add_filter("userid", options.userid)
 
-    # form a dictionary between jobid and 'osuXXXX'
-    jobid_to_user = {}
-    for job in joblist: 
-        jobid_to_user[str(job)] = job.userid
-
-    nodelist.add_jobid_to_user(jobid_to_user)
+    # fold joblist with procesing of dictionaries into nodelist
+    nodelist.add_joblist(joblist)
 
     display = qhost.Display(
         color=options.color,
@@ -149,9 +149,7 @@ def run(options):
         shownote=options.notes
     )
     
-       
-
-    display.list(nodelist, jobid_to_user)
+    display.list(nodelist)
 
 def main():
     run(get_options())

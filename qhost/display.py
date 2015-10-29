@@ -33,10 +33,10 @@ class Display:
         self.showtype = showtype
         self.shownote = shownote
 
-    def list(self, nodelist, jobid_to_user):
+    def list(self, nodelist):
         print self.header()
         for node in nodelist:
-            self.display_node(node, jobid_to_user)
+            self.display_node(node, nodelist.jobid_to_user)
 
     def display_node(self, node, jobid_to_user):
         print self.nodeline(node)

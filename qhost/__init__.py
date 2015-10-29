@@ -14,6 +14,6 @@
 
 from pbsnodes import Pbsnodes, Showq
 from display import Display
-from node import Node, Job
-from node_list import NodeList, JobList
-from parser import Parser, Parser2
+from node import Node
+from node_list import NodeList
+from parser import Parser_Pbsnodes, Parser_Showq

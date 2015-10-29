@@ -13,37 +13,6 @@
 # limitations under the License.
 
 
-class JobList:
-    def __init__(self):
-        self.jobs = []
-        self.filters = {}
-        self.jobid_to_user = {}
-
-    def __iter__(self):
-        for job in self.jobs:
-            if self.matches(job):
-                yield job
-
-    def __getitem__(self, index):
-        return self.jobs[index]
-
-    def add(self, job):
-        self.jobs.append(job)
-
-    def add_filter(self, filter, value):
-        if value:
-            self.filters[filter] = value
-
-    def matches(self, job):
-        for key, value in self.filters.iteritems():
-            print key, value
-            if not getattr(self, "filter_by_%s" % key)(job, value):
-                return False
-        return True
-
-    def filter_by_userid(self, job, userid):
-        return job.has_user(userid)
-
 class NodeList:
     def __init__(self):
         self.nodes = []
@@ -66,17 +35,17 @@ class NodeList:
         if value:
             self.filters[filter] = value
 
-    def add_jobid_to_user(self, jobid_to_user):
-        if jobid_to_user: 
-            self.jobid_to_user= jobid_to_user
+    def add_joblist(self, joblist):
+        if joblist:
+            # form a dictionary between jobid and 'osuXXXX'
+            for job in joblist: 
+                self.jobid_to_user[str(job)] = job.userid
 
-        # inverse map
-        user_to_jobid = {}
-        for k, v in jobid_to_user.iteritems():
-            user_to_jobid[v] = user_to_jobid.get(v, [])
-            user_to_jobid[v].append(k)
-        self.user_to_jobid = user_to_jobid
-
+            # inverse map
+            for k, v in self.jobid_to_user.iteritems():
+                self.user_to_jobid[v] = self.user_to_jobid.get(v, [])
+		self.user_to_jobid[v].append(k)
+ 
     def matches(self, node):
         for key, value in self.filters.iteritems():
             if not getattr(self, "filter_by_%s" % key)(node, value):

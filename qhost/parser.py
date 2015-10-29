@@ -15,8 +15,6 @@ import sys
 import xml.dom.minidom
 from qhost import Node
 from qhost import NodeList
-from qhost import Job
-from qhost import JobList
 from constants import STATES
 from parsers import StringParser
 from parsers import IntParser
@@ -25,7 +23,7 @@ from parsers import JobParser
 from parsers import StatusParser
 
 
-class Parser:
+class Parser_Pbsnodes:
     def __init__(self, qxml):
         self.qxml = qxml
         self.nodelist = NodeList()
@@ -61,10 +59,10 @@ class Parser:
 
         return n
 
-class Parser2:
+class Parser_Showq:
     def __init__(self, qxml):
         self.qxml = qxml
-        self.joblist = JobList()
+        self.joblist = NodeList()
 
     def parse(self):
         return self.handle_data()
@@ -85,7 +83,7 @@ class Parser2:
         # name = StringParser(job, "JobID").parse()
         # pull from minidom attribute method
         name = job.attributes["JobID"].value
-        j = Job(name)
+        j = Node(name)
 
         # j.user = StringParser(job, "\@User", default='').parse()
         # pull from minidom attribute method
