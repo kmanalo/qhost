@@ -56,7 +56,7 @@ class NodeList:
         return node.has_job(jobid)
 
     def filter_by_userid(self, node, userid):
-        jobids = self.user_to_jobid[userid] 
+        jobids = self.user_to_jobid.setdefault(userid, "None") 
         return node.has_user(jobids)
 
     def filter_by_node_regex(self, node, regex):
