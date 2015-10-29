@@ -38,13 +38,13 @@ class NodeList:
     def add_joblist(self, joblist):
         if joblist:
             # form a dictionary between jobid and 'osuXXXX'
-            for job in joblist: 
+            for job in joblist:
                 self.jobid_to_user[str(job)] = job.userid
 
             # inverse map
             for k, v in self.jobid_to_user.iteritems():
                 self.user_to_jobid[v] = self.user_to_jobid.get(v, [])
-		self.user_to_jobid[v].append(k)
+                self.user_to_jobid[v].append(k)
  
     def matches(self, node):
         for key, value in self.filters.iteritems():
@@ -56,7 +56,7 @@ class NodeList:
         return node.has_job(jobid)
 
     def filter_by_userid(self, node, userid):
-        jobids = self.user_to_jobid.setdefault(userid, "None") 
+        jobids = self.user_to_jobid.setdefault(userid, "None")
         return node.has_user(jobids)
 
     def filter_by_node_regex(self, node, regex):

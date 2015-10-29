@@ -24,8 +24,8 @@ class Display:
     TEAL = 4
     RESET = 5
 
-    def __init__(self, color=False, showjobs=False, showusers=False, showprops=False,
-                 showtype=False, shownote=False):
+    def __init__(self, color=False, showjobs=False, showusers=False, 
+                 showprops=False, showtype=False, shownote=False):
         self.color = color
         self.showjobs = showjobs
         self.showusers = showusers
