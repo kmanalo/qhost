@@ -11,9 +11,12 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+import sys
 import xml.dom.minidom
 from qhost import Node
 from qhost import NodeList
+from qhost import Job
+from qhost import JobList
 from constants import STATES
 from parsers import StringParser
 from parsers import IntParser
@@ -57,3 +60,35 @@ class Parser:
         n.from_hash(status)
 
         return n
+
+class Parser2:
+    def __init__(self, qxml):
+        self.qxml = qxml
+        self.joblist = JobList()
+
+    def parse(self):
+        return self.handle_data()
+
+    def handle_data(self):
+        dom = xml.dom.minidom.parseString(self.qxml)
+        jobs = dom.getElementsByTagName("job")
+        return self.handle_jobs(jobs)
+
+    def handle_jobs(self, jobs):
+        for job in jobs:
+            self.joblist.add(self.handle_job(job))
+
+        return self.joblist
+
+    def handle_job(self, job):
+ 
+        # name = StringParser(job, "JobID").parse()
+        # pull from minidom attribute method
+        name = job.attributes["JobID"].value
+        j = Job(name)
+
+        # j.user = StringParser(job, "\@User", default='').parse()
+        # pull from minidom attribute method
+        j.userid = job.attributes["User"].value
+
+        return j

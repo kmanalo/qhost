@@ -24,20 +24,21 @@ class Display:
     TEAL = 4
     RESET = 5
 
-    def __init__(self, color=False, showjobs=False, showprops=False,
+    def __init__(self, color=False, showjobs=False, showusers=False, showprops=False,
                  showtype=False, shownote=False):
         self.color = color
         self.showjobs = showjobs
+        self.showusers = showusers
         self.showprops = showprops
         self.showtype = showtype
         self.shownote = shownote
 
-    def list(self, nodelist):
+    def list(self, nodelist, jobid_to_user):
         print self.header()
         for node in nodelist:
-            self.display_node(node)
+            self.display_node(node, jobid_to_user)
 
-    def display_node(self, node):
+    def display_node(self, node, jobid_to_user):
         print self.nodeline(node)
         if self.showprops and len(node.properties) > 0:
             print self.proplines(node)
@@ -45,6 +46,8 @@ class Display:
             print self.typelines(node)
         if self.showjobs and len(node.jobs) > 0:
             print self.joblines(node)
+        if self.showusers and len(node.jobs) > 0:
+            print self.userlines(node, jobid_to_user)
         if self.shownote and node.has_note():
             print self.notelines(node)
 
@@ -77,6 +80,16 @@ class Display:
         line += self.pad("Jobs", 12) + ": "
         # Use set to only show unique jobids
         line += ", ".join(node.jobs)
+        return self.out(line, color=Color.GRAY)
+
+    def userlines(self, node, jobid_to_user):
+        line = " " * 19
+        line += self.pad("Users", 12) + ": "
+        # Use set to only show unique userids
+        users = []
+        for job in node.jobs:
+            users.append(jobid_to_user[str(job)])
+        line += ", ".join(users)
         return self.out(line, color=Color.GRAY)
 
     def proplines(self, node):

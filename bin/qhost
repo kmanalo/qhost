@@ -18,6 +18,7 @@ import sys
 from optparse import OptionParser
 
 lib_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../')
+lib_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.environ['HOME']+'/software/qhost')
 if lib_path not in sys.path:
     sys.path.insert(0, lib_path)
 import qhost
@@ -39,6 +40,14 @@ def get_options():
         "-J", "--jobid",
         dest="jobid", default=None,
         help="Only show nodes used by the specified job ID.")
+    parser.add_option(
+        "-u", "--users",
+        action="store_true", dest="users", default=False,
+        help="show user information")
+    parser.add_option(
+        "-U", "--userid",
+        dest="userid", default=None,
+        help="Only show users by the specified user ID.")
     parser.add_option(
         "-n", "--ntype",
         action="store_true", dest="ntype", default=False,
@@ -99,7 +108,9 @@ def get_options():
 def run(options):
     if options.xmlfile is None:
         pbsnodes = qhost.Pbsnodes("pbsnodes")
+        showq = qhost.Showq("showq")
         xml = pbsnodes.execute()
+        xml2 = showq.execute()
         if xml is None:
             print pbsnodes.error()
             sys.exit(1)
@@ -111,23 +122,36 @@ def run(options):
             sys.exit(1)
 
     qp = qhost.Parser(xml)
+    qp2 = qhost.Parser2(xml2)
     nodelist = qp.parse()
+    joblist = qp2.parse()
     if options.exclusive:
         nodelist.add_filter("exclusive_state", options.state)
     else:
         nodelist.add_filter("any_state", options.state)
     nodelist.add_filter("node_regex", options.node_regex)
     nodelist.add_filter("jobid", options.jobid)
+    nodelist.add_filter("userid", options.userid)
+
+    # form a dictionary between jobid and 'osuXXXX'
+    jobid_to_user = {}
+    for job in joblist: 
+        jobid_to_user[str(job)] = job.userid
+
+    nodelist.add_jobid_to_user(jobid_to_user)
 
     display = qhost.Display(
         color=options.color,
         showjobs=options.jobs,
+        showusers=options.users,
         showprops=options.properties,
         showtype=options.ntype,
         shownote=options.notes
     )
-    display.list(nodelist)
+    
+       
 
+    display.list(nodelist, jobid_to_user)
 
 def main():
     run(get_options())

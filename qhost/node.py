@@ -28,6 +28,7 @@ class Node:
         self.availmem = 0
         self.procs = 0
         self.jobs = []
+        self.users = []
         self.loadave = 0
         self.os = ''
         self.gpus = 0
@@ -49,6 +50,13 @@ class Node:
     def has_job(self, jobid):
         return jobid in self.jobs
 
+    def has_user(self, userid):
+        # check if any elements in userid list are in another list
+        #print userid, self.jobs
+        #import sys
+        #sys.exit(1)
+        return [i for i in self.jobs if i in userid]
+
     def has_note(self):
         return self.note != ""
 
@@ -64,3 +72,38 @@ class Node:
     def state_any_matches(self, states):
         compare_state = list(states)
         return set(compare_state) <= set(self.state)
+
+#class Job:
+#    def __init__(self, name):
+#        self.name = name
+#        self.users = []
+#
+#    def __repr__(self):
+#        return self.name
+#
+#    def __str__(self):
+#        return self.name
+#
+#    def from_hash(self, attrs):
+#        for attr, value in attrs.iteritems():
+#            setattr(self, attr, value)
+#
+#    def has_userid(self, userid, jobid_to_user):
+#        return userid in self.users
+#
+#    def matches(self, regex):
+#        match = re.compile(regex)
+#        return not match.search(self.name) is None
+#
+#    def state_exclusive_matches(self, states):
+#        compare_state = sorted(list(states))
+#        # compare the intersection set to the self.state set
+#        return set(self.state) & set(compare_state) == set(self.state)
+#
+#    def state_any_matches(self, states):
+#        compare_state = list(states)
+#        return set(compare_state) <= set(self.state)
+
+class Job(Node):
+    def __init__(self, name):
+        Node.__init__(self, name)
