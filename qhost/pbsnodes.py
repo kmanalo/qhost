@@ -31,6 +31,7 @@ class Pbsnodes:
     def error(self):
         return self.errmsg
 
+
 class Showq:
     def __init__(self, binfile):
         self.binfile = binfile

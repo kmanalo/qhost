@@ -69,4 +69,3 @@ class Node:
     def state_any_matches(self, states):
         compare_state = list(states)
         return set(compare_state) <= set(self.state)
-
