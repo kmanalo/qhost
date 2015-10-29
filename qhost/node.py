@@ -70,7 +70,3 @@ class Node:
         compare_state = list(states)
         return set(compare_state) <= set(self.state)
 
-
-#class Job(Node):
-#    def __init__(self, name):
-#        Node.__init__(self, name)

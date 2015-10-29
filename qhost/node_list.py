@@ -45,7 +45,7 @@ class NodeList:
             for k, v in self.jobid_to_user.iteritems():
                 self.user_to_jobid[v] = self.user_to_jobid.get(v, [])
                 self.user_to_jobid[v].append(k)
- 
+
     def matches(self, node):
         for key, value in self.filters.iteritems():
             if not getattr(self, "filter_by_%s" % key)(node, value):

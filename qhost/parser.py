@@ -59,6 +59,7 @@ class Parser_Pbsnodes:
 
         return n
 
+
 class Parser_Showq:
     def __init__(self, qxml):
         self.qxml = qxml
@@ -79,7 +80,7 @@ class Parser_Showq:
         return self.joblist
 
     def handle_job(self, job):
- 
+
         # name = StringParser(job, "JobID").parse()
         # pull from minidom attribute method
         name = job.attributes["JobID"].value
