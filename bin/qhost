@@ -121,7 +121,7 @@ def run(options):
         if pbsnodes_xml is None:
             print pbsnodes.error()
             sys.exit(1)
- 
+
         # only perform when users option is true
         if options.users:
             showq = qhost.Showq("showq")
